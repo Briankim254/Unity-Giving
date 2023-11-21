@@ -24,7 +24,7 @@ export interface campaignProps {
   user_id: string;
 }
 
-export const TabBar = async({ campaigns }: { campaigns: campaignProps[] }) => {
+export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
   const router = useRouter();
   return (
     <div className="flex w-full flex-col ">
