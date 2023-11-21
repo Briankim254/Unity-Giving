@@ -1,54 +1,75 @@
-import NextLink from "next/link";
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code"
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import { title } from "@/components/primitives";
+import { FaHandsHelping } from "react-icons/fa";
+import { TabBar } from "@/components/tabs";
+import axios from "axios";
+import { Suspense } from "react";
+import { auth, currentUser } from "@clerk/nextjs";
 
-export default function Home() {
-	return (
-		<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-			<div className="inline-block max-w-lg text-center justify-center">
-				<h1 className={title()}>Make&nbsp;</h1>
-				<h1 className={title({ color: "violet" })}>beautiful&nbsp;</h1>
-				<br />
-				<h1 className={title()}>
-					websites regardless of your design experience.
-				</h1>
-				<h2 className={subtitle({ class: "mt-4" })}>
-					Beautiful, fast and modern React UI library.
-				</h2>
-			</div>
+async function getData() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const res = await axios.get(`${appUrl}/api/campaigns`);
+  const data = await res.data;
+  return data;
+}
 
-			<div className="flex gap-3">
-				<Link
-					isExternal
-					as={NextLink}
-					href={siteConfig.links.docs}
-					className={buttonStyles({ color: "primary", radius: "full", variant: "shadow" })}
-				>
-					Documentation
-				</Link>
-				<Link
-					isExternal
-					as={NextLink}
-					className={buttonStyles({ variant: "bordered", radius: "full" })}
-					href={siteConfig.links.github}
-				>
-					<GithubIcon size={20} />
-					GitHub
-				</Link>
-			</div>
+export default async function Home() {
+  const data = await getData();
+  return (
+    <>
+      <section>
+        <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-24">
+          <div className="flex flex-col w-full mb-12 text-center">
+            <div className="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mx-auto mb-5 text-secondary rounded-full dark:bg-gray-900 bg-slate-200">
+              <FaHandsHelping size={40} />
+            </div>
+            <h1 className="max-w-5xl text-2xl font-bold leading-none tracking-tighter  md:text-5xl lg:text-6xl lg:max-w-7xl">
+              <span className={title({ color: "violet" })}>
+                Make an impact{" "}
+              </span>{" "}
+              <br></br>
+              no matter where you are
+            </h1>
 
-			<div className="mt-8">
-				<Snippet hideSymbol hideCopyButton variant="flat">
-					<span>
-						Get started by editing <Code color="primary">app/page.tsx</Code>
-					</span>
-				</Snippet>
-			</div>
-		</section>
-	);
+            <p className="max-w-xl mx-auto mt-8 text-base leading-relaxed text-center text-gray-500">
+              Our mission is to bring people together from all walks of life to
+              support those in need and create positive change in our
+              communities.{" "}
+            </p>
+
+            <a
+              className="mx-auto mt-8 text-sm font-semibold text-blue-600 hover:text-neutral-600"
+              title="read more"
+            >
+              {" "}
+              Read more about the Project »{" "}
+            </a>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="2xl:max-w-7xl sm:px-6 md:px-12 lg:px-24 lg:py-24 2xl:px-12 px-4 py-12 mx-auto">
+          <div className="2xl:max-w-7xl flex flex-wrap items-center mx-auto">
+            <div className="lg:flex-grow lg:w-1/2 lg:pr-24 md:mb-0 flex flex-col items-start mb-16 text-left">
+              <span className="mb-8 text-xs font-bold tracking-widest text-blue-600 uppercase underline underline-offset-8 ">
+                {" "}
+                Explore{" "}
+              </span>
+              <h1 className=" md:text-7xl lg:text-5xl mb-8 text-4xl font-bold leading-none tracking-tighter">
+                Today&apos;s Campaigns.
+              </h1>
+              <p className="mb-8 text-base leading-relaxed text-left text-gray-500">
+                Fundraising campaigns change lives and unite commmunities around
+                the world.Your gift to help those in need will helps us provide
+                assistance to people who need it most in a meaningful and
+                tangable way.<br></br>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <Suspense fallback={<p>Loading feed...</p>}>
+        <TabBar campaigns={data} />
+      </Suspense>
+    </>
+  );
 }

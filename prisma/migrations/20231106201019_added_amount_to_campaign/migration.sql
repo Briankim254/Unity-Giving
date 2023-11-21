@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `campaign` ADD COLUMN `amount` INTEGER NOT NULL DEFAULT 0;
