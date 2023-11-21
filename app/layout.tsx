@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { HeartFilledIcon } from "@/components/icons";
 import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
@@ -63,6 +63,7 @@ export default function RootLayout({
               </footer>
             </div>
           </Providers>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
