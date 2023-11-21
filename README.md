@@ -1,6 +1,6 @@
-# Next.js & NextUI Template
+# Unity Giging
 
-This is a template for creating applications using Next.js 13 (app directory) and NextUI (v2).
+This is a project to help the needy create a campaign for the general public to donate to them. This project is created for the good of the people and is not for profit.
 
 ## Technologies Used
 
@@ -11,16 +11,19 @@ This is a template for creating applications using Next.js 13 (app directory) an
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
+- [Prisma](https://www.prisma.io/)
+- [Clerk Auth (Beta)](https://clerk.com/)
+- [Vercel](https://vercel.com/)
 
 ## How to Use
 
+### Use contribute
 
-### Use the template with create-next-app
+Clone the repository
 
-To create a new project based on this template using `create-next-app`, run the following command:
 
 ```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
+git clone git@github.com:Briankim254/Unity-Giving.git
 ```
 
 ### Install dependencies
@@ -28,6 +31,8 @@ npx create-next-app -e https://github.com/nextui-org/next-app-template
 ```bash
 npm install
 ```
+
+## configure the env file and other keys
 
 ### Run the development server
 
@@ -37,4 +42,4 @@ npm run dev
 
 ## License
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+Licensed under the MIT license
