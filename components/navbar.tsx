@@ -39,7 +39,7 @@ const getUserRole = async (userId: string | undefined) => {
   }
 };
 
-export const Navbar = async () => {
+export default async function Navbar(){
   const { userId } = auth();
   const adminPromise = getUserRole(userId || "").then((role) => role === "ADMIN");
   const isAdmin = await adminPromise; 
