@@ -3,13 +3,32 @@ import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
-import Navbar from "@/components/navbar";
+import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import { HeartFilledIcon } from "@/components/icons";
 import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
+import prisma from "@/prisma/client";
+import { auth } from "@clerk/nextjs";
+
+const getUserRole = async (userId: string | undefined) => {
+  if (!userId) {
+    return null;
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user?.role || null;
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+    throw error;
+  }
+};
 
 export const metadata: Metadata = {
   title: {
@@ -33,6 +52,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { userId } = auth();
+  const adminPromise = getUserRole(userId || "").then(
+    (role) => role === "ADMIN"
+  );
+  const isAdmin = await adminPromise;
+  console.log("isAdmin", isAdmin);
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
@@ -45,7 +70,7 @@ export default async function RootLayout({
         >
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col h-screen">
-              <Navbar />
+              <Navbar isAdmin={isAdmin} />
               <Toaster position="top-right" richColors />
               <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
                 {children}

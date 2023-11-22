@@ -22,27 +22,8 @@ import { GithubIcon, HeartFilledIcon, SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import prisma from "@/prisma/client";
 
-const getUserRole = async (userId: string | undefined) => {
-  if (!userId) {
-    return null;
-  }
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    return user?.role || null;
-  } catch (error) {
-    console.error("Error fetching user role:", error);
-    throw error;
-  }
-};
-
-export default async function Navbar(){
-  const { userId } = auth();
-  const adminPromise = getUserRole(userId || "").then((role) => role === "ADMIN");
-  const isAdmin = await adminPromise; 
+export const Navbar = ( { isAdmin }: { isAdmin: boolean }) => {
+  
   const searchInput = (
     <Input
       aria-label="Search"
