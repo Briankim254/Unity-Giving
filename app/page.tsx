@@ -8,7 +8,7 @@ import { auth, currentUser } from "@clerk/nextjs";
 async function getData() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   const res = await axios.get(`${appUrl}/api/campaigns`);
-  const data = await res.data;
+  const data = await res.data || [];
   return data;
 }
 
@@ -70,6 +70,8 @@ export default async function Home() {
       <Suspense fallback={<p>Loading feed...</p>}>
         <TabBar campaigns={data} />
       </Suspense>
+
+      
     </>
   );
 }

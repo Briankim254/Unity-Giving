@@ -8,6 +8,9 @@ const getData = async (params: string) => {
       where: {
         id: Number(params),
       },
+      include:{
+        beneficiary:true
+      }
     })
     .catch((e) => {
       throw e;
@@ -25,7 +28,7 @@ export default async function BlogPage({
 }) {
   const data = await getData(params.slug);
   const userId = data.user_id || "";
-  const user = await clerkClient.users.getUser(userId);
+  const user = await clerkClient.users.getUser(userId) 
   const { firstName, lastName, imageUrl } = user
   return (
     <>

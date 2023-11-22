@@ -81,7 +81,6 @@ export async function POST(req: Request) {
       },
     });
     console.log("User created:", user?.email ?? "No email found");
-    // save user role to the user metadata
     await clerkClient.users.updateUserMetadata(id, {
       // Read only on client, Read / Write on the server
       publicMetadata: {
@@ -96,7 +95,27 @@ export async function POST(req: Request) {
         role: "USER",
       },
     });
-    console.log("User with role saved to metadata");
+    console.log("User with role saved to database and  metadata created ");
   }
+  if (eventType === "user.deleted") {
+    const { id } = evt.data;
+    try {
+    await prisma.campaign.deleteMany({
+      where: {
+        user_id: id,
+      },
+    });
+    const user = await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log("User deleted:", user?.email ?? "No email found");
+    }
+    catch (err) {
+      console.error('Error deleting user and campaigns: ', err);
+    }
+  }
+
   return new Response("", { status: 200 });
 }

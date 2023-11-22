@@ -9,29 +9,35 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  firstName  String?   @db.VarChar(255)
-  lastName   String?   @db.VarChar(255)
-  email      String    @unique
-  imageUrl   String?   @db.VarChar(255)
-  role       String    @default("USER")
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
+  id          String     @id @default(uuid())
+  firstName   String?    @db.VarChar(255)
+  lastName    String?    @db.VarChar(255)
+  email       String     @unique
+  imageUrl    String?    @db.VarChar(255)
+  role        String     @default("USER")
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  deleted_at  DateTime?
+  beneficiary Campaign[]
 }
 
-model campaign {
+model Campaign {
   id          Int             @id @default(autoincrement())
   title       String          @db.VarChar(255)
   description String?         @db.Text
   status      campaign_status @default(DRAFT)
   amount      Int             @default(0)
+  phone       String?
+  address     String?
   start_date  DateTime?
   end_date    DateTime?
   created_at  DateTime        @default(now())
   updated_at  DateTime        @updatedAt
   deleted_at  DateTime?
-  user_id     String?         @db.VarChar(255)
+  beneficiary User            @relation(fields: [user_id], references: [id])
+  user_id     String
+
+  @@index([user_id])
 }
 
 enum campaign_status {
@@ -51,15 +57,6 @@ model Donor {
   deleted_at DateTime?
 }
 
-model Beneficiary {
-  id         String    @id @default(uuid())
-  phone      String
-  address    String?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-}
-
 model Donation {
   id          Int       @id @default(autoincrement())
   campaign_id Int
@@ -68,13 +65,4 @@ model Donation {
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   deleted_at  DateTime?
-}
-
-model CampaignBeneficiary {
-  id             String    @id @default(uuid())
-  campaign_id    Int
-  beneficiary_id Int
-  created_at     DateTime  @default(now())
-  updated_at     DateTime  @updatedAt
-  deleted_at     DateTime?
 }

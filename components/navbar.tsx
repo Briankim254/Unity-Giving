@@ -20,13 +20,29 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/icons";
-// define user role as type string
-type userRole = string;
+import prisma from "@/prisma/client";
 
-export const Navbar = () => {
-  const { user } = auth();
-  const userRole  = user?.privateMetadata.role ;
-  console.log(userRole);
+const getUserRole = async (userId: string | undefined) => {
+  if (!userId) {
+    return null;
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user?.role || null;
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+    throw error;
+  }
+};
+
+export const Navbar = async () => {
+  const { userId } = auth();
+  const adminPromise = getUserRole(userId || "").then((role) => role === "ADMIN");
+  const isAdmin = await adminPromise; 
   const searchInput = (
     <Input
       aria-label="Search"
@@ -72,32 +88,20 @@ export const Navbar = () => {
               </NextLink>
             </NavbarItem>
           ))}
-          {userRole == "USER" ? (
-            <NavbarItem key="user">
+          {isAdmin && (
+            <NavbarItem key="admin">
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
-                href="/user"
+                href="/admin"
               >
-                User Dashboard
+                Admin Dashboard
               </NextLink>
             </NavbarItem>
-          ) : null}
-          <NavbarItem key="admin">
-            <NextLink
-              className={clsx(
-                linkStyles({ color: "foreground" }),
-                "data-[active=true]:text-primary data-[active=true]:font-medium"
-              )}
-              color="foreground"
-              href="/admin"
-            >
-              Admin Dashboard
-            </NextLink>
-          </NavbarItem>
+          )}
         </ul>
       </NavbarContent>
 

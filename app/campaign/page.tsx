@@ -55,14 +55,19 @@ function Campaign() {
       .post("/api/campaigns", data)
       .then((res) => {
         toast.success(
-          "Your campaign has been created. You will be redirected to the home page shortly."
+          "Congragulations, campaign has been created succesfully."
         );
+        toast.info(
+          "You will be redirected back shortly."
+        );
+        console.log("campaign created. Response:"+res);
         router.push("/");
       })
       .catch((err) => {
         toast.error(
-          "An error occured while creating your campaign. Please try again later."
+          "An error occured while creating your campaign."
         );
+        console.log("error creating campaign. Error:"+err);
       });
   };
 

@@ -22,6 +22,14 @@ export interface campaignProps {
   updated_at: string;
   deleted_at: string | null;
   user_id: string;
+  beneficiary: beneficiaryProps;
+  firstName: string;
+  lastName: string;
+}
+
+export interface beneficiaryProps {
+  firstName: string;
+  lastName: string;
 }
 
 export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
@@ -45,7 +53,7 @@ export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
                       }}
                     >
                       <CardHeader>
-                        <h4>Nawaf El Azam</h4>
+                        <h4> {campaign.beneficiary.firstName} {campaign.beneficiary.lastName}</h4>
                         <span className="px-2">
                           <BsFillPatchCheckFill className="text-secondary" />
                         </span>
