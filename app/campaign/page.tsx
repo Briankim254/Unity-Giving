@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Button, Textarea, Select, SelectItem } from "@nextui-org/react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import "easymde/dist/easymde.min.css";
@@ -9,7 +9,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FaPaperPlane } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
-
 
 enum CurrencyEnum {
   KES = "KES",
@@ -34,7 +33,7 @@ const schema = z.object({
   phone: z.string().min(10).max(13),
   amount: z.number().min(1),
   description: z.string().min(10).max(1000),
-  userId : z.string()
+  userId: z.string(),
 });
 
 type CampaignProps = z.infer<typeof schema>;
@@ -50,24 +49,23 @@ function Campaign() {
   const onSubmit: SubmitHandler<CampaignProps> = async (data) => {
     data.deadline = new Date(data.deadline);
     data.amount = Number(data.amount);
-    data.userId = user?.id || "" ;
+    data.userId = user?.id || "";
     await axios
       .post("/api/campaigns", data)
       .then((res) => {
-        toast.success(
-          "Congragulations, campaign has been created succesfully."
-        );
-        toast.info(
-          "You will be redirected back shortly."
-        );
-        console.log("campaign created. Response:"+res);
+        toast.info("You will be redirected back shortly.");
+        setTimeout(() => {
+          toast.success(
+            "Congragulations, campaign has been created succesfully."
+          );
+        }, 2000);
+
+        console.log("campaign created. Response:" + res);
         router.push("/");
       })
       .catch((err) => {
-        toast.error(
-          "An error occured while creating your campaign."
-        );
-        console.log("error creating campaign. Error:"+err);
+        toast.error("An error occured while creating your campaign.");
+        console.log("error creating campaign. Error:" + err);
       });
   };
 
@@ -132,7 +130,6 @@ function Campaign() {
             {...register("description", { required: true })}
           />
           <div className="flex justify-center">
-            
             <Button
               color="primary"
               type="submit"
