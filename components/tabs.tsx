@@ -88,36 +88,43 @@ export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
           <section>
             <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                <Card
-                  isHoverable
-                  isPressable
-                  isFooterBlurred
-                  onPress={() => {
-                    window.location.href = "/details";
-                  }}
-                >
-                  <CardHeader>
-                    <h4>Kimutai brian</h4>
-                  </CardHeader>
-                  <CardBody>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Quisquam, voluptates.
-                    </p>
-                  </CardBody>
-                  <CardFooter>
-                    <Progress
-                      label="Raised"
-                      size="md"
-                      value={4000}
-                      maxValue={10000}
-                      color="warning"
-                      formatOptions={{ style: "currency", currency: "Kes" }}
-                      showValueLabel={true}
-                      className="max-w-md"
-                    />
-                  </CardFooter>
-                </Card>
+              {campaigns.map((campaign) => (
+                    <Card
+                      key={campaign.id}
+                      isHoverable
+                      isPressable
+                      isFooterBlurred
+                      onPress={() => {
+                        router.push("/donate/" + campaign.id);
+                      }}
+                    >
+                      <CardHeader>
+                        <h4> {campaign.beneficiary.firstName} {campaign.beneficiary.lastName}</h4>
+                        <span className="px-2">
+                          <BsFillPatchCheckFill className="text-secondary" />
+                        </span>
+                      </CardHeader>
+                      <CardBody>
+                        <p>{campaign.title}</p>
+                      </CardBody>
+                      <CardFooter>
+                        <Progress
+                          label="Raised"
+                          size="md"
+                          value={100}
+                          maxValue={campaign.amount}
+                          color={
+                            campaign.amount > campaign.amount / 2
+                              ? "success"
+                              : "danger"
+                          }
+                          formatOptions={{ style: "currency", currency: "Kes" }}
+                          showValueLabel={true}
+                          className="max-w-md"
+                        />
+                      </CardFooter>
+                    </Card>
+                  ))}
               </div>
             </div>
           </section>
