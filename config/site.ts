@@ -34,10 +34,6 @@ export const siteConfig = {
       label: "Settings",
       href: "/user-profile",
     },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
   ],
   links: {
     github: "https://github.com/Briankim254",

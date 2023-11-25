@@ -22,8 +22,7 @@ import { GithubIcon, HeartFilledIcon, SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import prisma from "@/prisma/client";
 
-export const Navbar = ( { isAdmin }: { isAdmin: boolean }) => {
-  
+export const Navbar = ({ isAdmin }: { isAdmin: boolean }) => {
   const searchInput = (
     <Input
       aria-label="Search"
@@ -135,13 +134,7 @@ export const Navbar = ( { isAdmin }: { isAdmin: boolean }) => {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={
-                  index === 0
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
+                color={index === 0 ? "primary" : "foreground"}
                 href={item.href}
                 size="lg"
               >
@@ -149,6 +142,13 @@ export const Navbar = ( { isAdmin }: { isAdmin: boolean }) => {
               </Link>
             </NavbarMenuItem>
           ))}
+          {isAdmin && (
+            <NavbarMenuItem key="admin">
+              <Link href="/admin" size="lg" color="danger">
+                Admin Dashboard
+              </Link>
+            </NavbarMenuItem>
+          )}
         </div>
       </NavbarMenu>
     </NextUINavbar>
