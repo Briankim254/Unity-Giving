@@ -6,7 +6,7 @@ This is a project to help the needy create a campaign for the general public to 
 
 ## Technologies Used
 
-- [Next.js 13](https://nextjs.org/docs/getting-started)
+- [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Tailwind Variants](https://tailwind-variants.org)
