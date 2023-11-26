@@ -25,6 +25,7 @@ import { FaTrashAlt as DeleteIcon } from "react-icons/fa";
 import { FaEllipsisV as VerticalDotsIcon } from "react-icons/fa";
 import { Button } from "@nextui-org/button";
 import { IconWrapper } from "./iconWrapper";
+import { toast } from "sonner";
 interface Person {
   name: string;
   height: string;
@@ -71,6 +72,23 @@ const AdminPage: React.FC<AdminPageProps> = () => {
       ? "loading"
       : "idle";
 
+  const handleUpgradeUser = async (id: string, role: string) => {
+    const res = await fetch(`${appUrl}/api/user/role`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        role: role === "ADMIN" ? "USER" : "ADMIN",
+        id: id,
+      }),
+    });
+    const data = await res.json();
+    toast.success(`User updated to ${data.role}`);
+    setTimeout(() => {
+      window.location.reload(), 5000;
+    });
+  };
   return (
     <>
       <div className="pb-8">
@@ -106,7 +124,7 @@ const AdminPage: React.FC<AdminPageProps> = () => {
           loadingContent={<Spinner />}
           loadingState={loadingState}
         >
-          {(item: { id: string; [key: string]: any }) => (
+          {(item: { id: string; [key: string]: any; role: string }) => (
             <TableRow key={item?.id}>
               {(columnKey) => (
                 <TableCell>
@@ -126,18 +144,22 @@ const AdminPage: React.FC<AdminPageProps> = () => {
                                 <EyeIcon className="text-lg " />
                               </IconWrapper>
                             }
+                            onClick={() => toast("This function is not ready!")}
                           >
                             View
                           </DropdownItem>
                           <DropdownItem
-                            description="Upgrade this user to Admin"
+                            description="Update users role between admin and user"
                             startContent={
                               <IconWrapper className="bg-secondary/10 text-secondary">
                                 <EditIcon className="text-lg " />
                               </IconWrapper>
                             }
+                            onClick={() =>
+                              handleUpgradeUser(item.id, item.role)
+                            }
                           >
-                            Ugrade
+                            Toggle admin
                           </DropdownItem>
                           <DropdownItem
                             description="Delete this user "
@@ -145,6 +167,9 @@ const AdminPage: React.FC<AdminPageProps> = () => {
                               <IconWrapper className="bg-danger/10 text-danger">
                                 <DeleteIcon className="text-lg " />
                               </IconWrapper>
+                            }
+                            onClick={() =>
+                              toast.error(`${item.id} user deleted`)
                             }
                           >
                             Delete
