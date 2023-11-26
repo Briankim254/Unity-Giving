@@ -93,6 +93,9 @@ const AdminPage: React.FC<AdminPageProps> = () => {
     <>
       <div className="pb-8">
         <h1 className={title()}>Admin Dash.</h1>
+        <p className="text-lg text-default-500">
+          Hello admin, here you can manage users.
+        </p>
       </div>
       <Table
         aria-label="Example table with client async pagination"
