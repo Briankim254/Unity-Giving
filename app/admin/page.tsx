@@ -9,8 +9,10 @@ import {
   TableCell,
   Pagination,
   Spinner,
+  Chip,
   Tooltip,
   Dropdown,
+  ChipProps,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
@@ -31,6 +33,11 @@ interface Person {
   [key: string]: string;
 }
 
+const statusColorMap: Record<string, ChipProps["color"]> = {
+  ADMIN: "success",
+  USER: "secondary",
+};
+
 interface AdminPageProps {
   // Add any props if needed
 }
@@ -42,9 +49,10 @@ const fetcher = async (...args: Parameters<typeof fetch>) => {
 
 const AdminPage: React.FC<AdminPageProps> = () => {
   const [page, setPage] = useState<number>(1);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   const { data, error } = useSWR<{ count: number; results: [] }>(
-    `http://localhost:3000//api/users?page=${page}`,
+    `${appUrl}/api/users?page=${page}`,
     fetcher,
     {
       keepPreviousData: true,
