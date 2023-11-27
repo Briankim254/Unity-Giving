@@ -117,7 +117,7 @@ export const UserTable: React.FC<AdminPageProps> = () => {
       >
         <TableHeader>
           <TableColumn key="name">Name</TableColumn>
-          <TableColumn key="role">role</TableColumn>
+          <TableColumn key="role">Role</TableColumn>
           <TableColumn key="status">Status</TableColumn>
           <TableColumn key="actions">Actions</TableColumn>
         </TableHeader>
