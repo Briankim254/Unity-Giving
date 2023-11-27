@@ -49,7 +49,6 @@ export async function POST(req: Request, res: Response) {
 }
 
 export async function GET(req: NextRequest, res: Response) {
-  // add pagination
   const campaigns = await prisma.campaign.findMany({
     include: {
       beneficiary: true,

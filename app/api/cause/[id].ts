@@ -11,7 +11,6 @@ export async function GET(
       id: Number(slug),
     },
   });
-  console.log(campaign);
   if (!campaign) {
     return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
   }

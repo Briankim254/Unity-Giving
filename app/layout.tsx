@@ -61,7 +61,6 @@ export default async function RootLayout({
     (role) => role === "ADMIN"
   );
   const isAdmin = await adminPromise;
-  console.log("isAdmin", isAdmin);
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
