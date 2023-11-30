@@ -19,8 +19,8 @@ import clsx from "clsx";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, SearchIcon } from "@/components/icons";
-import { Logo } from "@/components/icons";
-import prisma from "@/prisma/client";
+import { FaHandsHoldingCircle } from "react-icons/fa6";
+
 
 export const Navbar = ({ isAdmin }: { isAdmin: boolean }) => {
   const searchInput = (
@@ -49,7 +49,7 @@ export const Navbar = ({ isAdmin }: { isAdmin: boolean }) => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
+            <FaHandsHoldingCircle size={35} />
             <p className="font-bold text-inherit">Unity Giving</p>
           </NextLink>
         </NavbarBrand>

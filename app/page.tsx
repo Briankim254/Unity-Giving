@@ -3,7 +3,6 @@ import { FaHandsHelping } from "react-icons/fa";
 import { TabBar } from "@/components/tabs";
 import axios from "axios";
 import { Suspense } from "react";
-import { auth } from "@clerk/nextjs";
 
 async function getData() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
