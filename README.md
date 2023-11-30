@@ -2,7 +2,13 @@
 
 ## visit - https://unity-giving.vercel.app
 
+
 This is a project to help the needy create a campaign for the general public to donate to them. This project is created for the good of the people and is not for profit.
+
+![Screenshot from 2023-11-30 21-45-24](https://github.com/Briankim254/Unity-Giving/assets/91450029/53b263a3-fb9b-4a57-b313-90c49dc2c79d)
+
+![Screenshot from 2023-11-30 21-45-47](https://github.com/Briankim254/Unity-Giving/assets/91450029/5417174f-8f10-45e5-965e-97975d0be9e1)
+
 
 ## Technologies Used
 
