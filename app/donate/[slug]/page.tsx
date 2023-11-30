@@ -42,6 +42,7 @@ export default async function BlogPage({
             data.description ? data.description : " No description provided"
           }
           amount={data.amount ? data.amount : 0}
+          created_at={data.created_at ? data.created_at.toString() : ""}
         />
       )}
     </>

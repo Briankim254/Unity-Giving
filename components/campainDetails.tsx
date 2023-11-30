@@ -13,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import { toast } from "sonner";
+import { format, formatDistanceToNow, subDays, parse } from "date-fns";
 
 type CampaignDetailsProps = {
   title: string;
@@ -21,6 +22,7 @@ type CampaignDetailsProps = {
   firstName: string;
   lastName: string;
   imageUrl: string;
+  created_at: string;
 };
 
 export const CampaignDetails = ({
@@ -30,6 +32,7 @@ export const CampaignDetails = ({
   title,
   description,
   amount,
+  created_at,
 }: CampaignDetailsProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
@@ -48,7 +51,13 @@ export const CampaignDetails = ({
                   {title}
                 </span>
                 <div className="flex items-center mt-6 text-sm font-medium leading-none text-left text-gray-500">
-                  <span className="ml-2"> 2 days ago </span>
+                  <time dateTime={created_at} className="ml-2">
+                    { 
+                      formatDistanceToNow(new Date(created_at), {
+                        addSuffix: true,
+                      })
+                    }
+                  </time>
                 </div>
                 <div className="flex  mt-6 text-sm font-medium leading-none text-left">
                   <User
