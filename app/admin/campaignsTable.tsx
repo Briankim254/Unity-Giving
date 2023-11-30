@@ -153,7 +153,6 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
                       {item.beneficiary?.email}
                     </User>
                   ) : columnKey === "amount" ? (
-                    // format amount to currency
                     new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "KES",

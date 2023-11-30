@@ -1,6 +1,7 @@
 "use client";
 
 import { UserTable } from "./userTable";
+import { FaHandsHelping, FaUserShield } from "react-icons/fa";
 import { CampaignsTable } from "./campaignsTable";
 import { Tabs, Tab } from "@nextui-org/react";
 
@@ -14,10 +15,26 @@ export const AdminTabs = () => {
           color="primary"
           fullWidth
         >
-          <Tab key="Campaigns" title="Campaigns">
+          <Tab
+            key="Campaigns"
+            title={
+              <div className="flex items-center space-x-2">
+                <FaHandsHelping size={30} />
+                <span>Campaigns</span>
+              </div>
+            }
+          >
             <CampaignsTable />
           </Tab>
-          <Tab key="users" title="Users">
+          <Tab
+            key="users"
+            title={
+              <div className="flex items-center space-x-2">
+                <FaUserShield size={30} />
+                <span>Users</span>
+              </div>
+            }
+          >
             <UserTable />
           </Tab>
         </Tabs>

@@ -7,7 +7,8 @@ import {
   CardFooter,
   Progress,
 } from "@nextui-org/react";
-import { BsFillPatchCheckFill } from "react-icons/bs";
+import { BsFillPatchCheckFill, BsStars } from "react-icons/bs";
+import { IoIosTrendingUp } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 export interface campaignProps {
@@ -37,7 +38,12 @@ export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
   return (
     <div className="flex w-full flex-col ">
       <Tabs aria-label="Options" size="lg" color="secondary" fullWidth>
-        <Tab key="Featured" title="Featured">
+        <Tab key="Featured" title={
+            <div className="flex items-center space-x-2">
+              <BsStars size={30}/>
+              <span>Featured</span>
+            </div>
+          }>
           <Suspense fallback={<div>Loading...</div>}>
             <section>
               <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
@@ -84,7 +90,12 @@ export const TabBar = ({ campaigns }: { campaigns: campaignProps[] }) => {
             </section>
           </Suspense>
         </Tab>
-        <Tab key="Trending" title="Trending">
+        <Tab key="Trending" title={
+            <div className="flex items-center space-x-2">
+              <IoIosTrendingUp size={30}/>
+              <span>Trending</span>
+            </div>
+          }>
           <section>
             <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
