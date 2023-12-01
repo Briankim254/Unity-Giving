@@ -47,7 +47,7 @@
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
     "react-simplemde-editor": "^5.2.0",
-    "sonner": "^1.1.0",
+    "sonner": "^1.2.4",
     "svix": "^1.14.0",
     "swr": "^2.2.4",
     "tailwind-variants": "^0.1.13",
