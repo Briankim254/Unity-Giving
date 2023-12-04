@@ -18,7 +18,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { FaEye as EyeIcon } from "react-icons/fa";
 import { FaUserPlus as EditIcon } from "react-icons/fa";
 import { FaTrashAlt as DeleteIcon } from "react-icons/fa";
@@ -62,6 +62,8 @@ export const UserTable: React.FC<AdminPageProps> = () => {
     fetcher,
     {
       keepPreviousData: true,
+      refreshInterval: 1000,
+      revalidateIfStale: true,
     }
   );
 
@@ -78,21 +80,29 @@ export const UserTable: React.FC<AdminPageProps> = () => {
       : "idle";
 
   const handleUpgradeUser = async (id: string, role: string) => {
-    const res = await fetch(`${appUrl}/api/user/role`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
+    const loadingPromise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    toast.promise(loadingPromise, {
+      loading: `Updating user to ${
+        role === "ADMIN" ? "user" : "admin"
+      }  role...`,
+      success: async () => {
+        const res = await fetch(`${appUrl}/api/user/role`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            role: role === "ADMIN" ? "USER" : "ADMIN",
+            id: id,
+          }),
+        });
+        const data = await res.json();
+        return `User ${data.firstName} ${data.lastName} is now ${data.role}!`;
       },
-      body: JSON.stringify({
-        role: role === "ADMIN" ? "USER" : "ADMIN",
-        id: id,
-      }),
+      error: `Failed to update user role!`,
     });
-    const data = await res.json();
-    toast.success(`User updated to ${data.role}`);
-    setTimeout(() => {
-      window.location.reload(), 5000;
-    });
+    mutate(`${appUrl}/api/users?page=${page}`);
   };
 
   return (

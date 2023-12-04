@@ -62,6 +62,7 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
     `${appUrl}/api/admin/campaign?page=${page}`,
     fetcher,
     {
+      keepPreviousData: true,
       refreshInterval: 1000,
       revalidateIfStale: true,
     }
