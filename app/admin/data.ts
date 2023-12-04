@@ -18,9 +18,8 @@ export const getUserRole = async (userId: string | undefined) => {
   }
 };
 
-const { userId } = auth();
-
 export const isAdmin = async () => {
+  const { userId } = auth();
   const role = await getUserRole(userId || "");
   return role === "ADMIN";
 };
