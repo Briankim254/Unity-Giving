@@ -18,7 +18,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { FaEye as EyeIcon, FaCheckCircle } from "react-icons/fa";
 import { FaCheckCircle as EditIcon } from "react-icons/fa";
 import { FaPauseCircle as DeleteIcon } from "react-icons/fa";
@@ -27,6 +27,7 @@ import { Button } from "@nextui-org/button";
 import { IconWrapper } from "./iconWrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { tr } from "date-fns/locale";
 
 interface Person {
   name: string;
@@ -61,7 +62,8 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
     `${appUrl}/api/admin/campaign?page=${page}`,
     fetcher,
     {
-      keepPreviousData: true,
+      refreshInterval: 1000,
+      revalidateIfStale: true,
     }
   );
 
@@ -78,22 +80,31 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
       : "idle";
 
   const handleCampaignStatus = async (id: string, status: string) => {
-    const res = await fetch(`${appUrl}/api/admin/campaign`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
+    const loadingPromise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    toast.promise(loadingPromise, {
+      loading: "Updating campaign status...",
+      success: async () => {
+        const res = await fetch(`${appUrl}/api/admin/campaign`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: status,
+            id: id,
+          }),
+        });
+
+        const data = await res.json();
+
+        return `Campaign status updated to ${data.status}`;
       },
-      body: JSON.stringify({
-        status: status,
-        id: id,
-      }),
+      error: "Error updating campaign status",
     });
-    const data = await res.json();
-    toast.success(`Campaign status updated to ${data.status}`);
-    setTimeout(() => {
-      window.location.reload(), 5000;
-    });
+    mutate(`${appUrl}/api/admin/campaign?page=${page}`);
   };
+
   const router = useRouter();
 
   return (

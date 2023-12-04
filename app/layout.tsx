@@ -39,7 +39,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const Admin = await isAdmin();
-  console.log(Admin);
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
