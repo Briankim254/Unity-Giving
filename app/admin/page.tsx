@@ -1,8 +1,13 @@
 import { title } from "@/components/primitives";
 import { AdminTabs } from "./adminTabs";
+import { isAdmin } from "./data";
+import { redirect } from "next/navigation";
 
-
-const AdminPage = () => {
+const AdminPage = async () => {
+  const Admin = await isAdmin();
+  if (!Admin) {
+    redirect("/404");
+  }
   return (
     <>
       <div className="pb-8">
