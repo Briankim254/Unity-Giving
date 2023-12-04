@@ -20,17 +20,6 @@ export async function POST(req: Request, res: Response) {
   if (!validation.success) {
     return NextResponse.json(validation.error.errors, { status: 400 });
   }
-  // const newCampaign = await prisma.campaign.create({
-  //   data: {
-  //     title: body.title,
-  //     description: body.description,
-  //     amount: body.amount,
-  //     start_date: new Date(),
-  //     end_date: body.deadline,
-  //     status: body.status,
-  //     user_id : body.userId,
-  //   },
-  // });
   const newCampaign = await prisma.campaign.create({
     data: {
       title: body.title,
@@ -52,6 +41,9 @@ export async function GET(req: NextRequest, res: Response) {
   const campaigns = await prisma.campaign.findMany({
     include: {
       beneficiary: true,
+    },
+    where: {
+      status: "ACTIVE",
     },
     orderBy: {
       id: "desc",

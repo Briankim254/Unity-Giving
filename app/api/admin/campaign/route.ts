@@ -23,3 +23,23 @@ export async function GET(req: NextRequest, res: Response) {
 
   return NextResponse.json(responseData, { status: 200 });
 }
+
+export async function PUT(req: NextRequest, res: NextResponse) {
+  if (req.method === "PUT") {
+    const body = await req.json();
+    try {
+      const updatedCampaign = await prisma.campaign.update({
+        where: { id: body.id },
+        data: { status: body.status },
+      });
+      return NextResponse.json(updatedCampaign, { status: 200 });
+    } catch (error) {
+      console.error("Error updating campaign status:", error);
+      return NextResponse.json(
+        { error: "Failed to update status" },
+        { status: 500 }
+      );
+    }
+  }
+  return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+}

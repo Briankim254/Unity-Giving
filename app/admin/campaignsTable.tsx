@@ -19,7 +19,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import useSWR from "swr";
-import { FaEye as EyeIcon } from "react-icons/fa";
+import { FaEye as EyeIcon, FaCheckCircle } from "react-icons/fa";
 import { FaCheckCircle as EditIcon } from "react-icons/fa";
 import { FaPauseCircle as DeleteIcon } from "react-icons/fa";
 import { FaEllipsisV as VerticalDotsIcon } from "react-icons/fa";
@@ -77,19 +77,19 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
       ? "loading"
       : "idle";
 
-  const handleCampaignStatus = async (id: string, role: string) => {
-    const res = await fetch(`${appUrl}/api/user/role`, {
+  const handleCampaignStatus = async (id: string, status: string) => {
+    const res = await fetch(`${appUrl}/api/admin/campaign`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        role: role === "ADMIN" ? "USER" : "ADMIN",
+        status: status,
         id: id,
       }),
     });
     const data = await res.json();
-    toast.success(`User updated to ${data.role}`);
+    toast.success(`Campaign status updated to ${data.status}`);
     setTimeout(() => {
       window.location.reload(), 5000;
     });
@@ -165,11 +165,11 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
                             <VerticalDotsIcon className="text-default-300" />
                           </Button>
                         </DropdownTrigger>
-                        <DropdownMenu>
+                        <DropdownMenu disabledKeys={[item.status]}>
                           <DropdownItem
                             description="View campaign details"
                             startContent={
-                              <IconWrapper className="bg-success/10 text-success">
+                              <IconWrapper className="bg-primary/10 text-primary">
                                 <EyeIcon className="text-lg " />
                               </IconWrapper>
                             }
@@ -178,6 +178,7 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
                             View Campaign
                           </DropdownItem>
                           <DropdownItem
+                            key="ACTIVE"
                             description="Update campaign status to approved"
                             startContent={
                               <IconWrapper className="bg-secondary/10 text-secondary">
@@ -185,21 +186,38 @@ export const CampaignsTable: React.FC<AdminPageProps> = () => {
                               </IconWrapper>
                             }
                             onClick={() =>
-                              handleCampaignStatus(item.id, item.status)
+                              handleCampaignStatus(item.id, "ACTIVE")
                             }
                           >
                             Approve Campaign
                           </DropdownItem>
                           <DropdownItem
+                            key="PAUSED"
                             description="Update campaign status to paused"
                             startContent={
                               <IconWrapper className="bg-warning/10 text-warning">
                                 <DeleteIcon className="text-lg " />
                               </IconWrapper>
                             }
-                            onClick={() => toast("This function is not ready!")}
+                            onClick={() =>
+                              handleCampaignStatus(item.id, "PAUSED")
+                            }
                           >
                             Suspend Campaign
+                          </DropdownItem>
+                          <DropdownItem
+                            key="COMPLETED"
+                            description="Update campaign status to completed"
+                            startContent={
+                              <IconWrapper className="bg-success/10 text-success">
+                                <FaCheckCircle className="text-lg " />
+                              </IconWrapper>
+                            }
+                            onClick={() =>
+                              handleCampaignStatus(item.id, "COMPLETED")
+                            }
+                          >
+                            Mark as Completed
                           </DropdownItem>
                         </DropdownMenu>
                       </Dropdown>
