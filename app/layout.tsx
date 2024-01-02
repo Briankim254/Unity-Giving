@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { isAdmin } from "./admin/data";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: {
@@ -69,6 +70,7 @@ export default async function RootLayout({
               </footer>
             </div>
           </Providers>
+          <SpeedInsights />
           <Analytics />
         </body>
       </html>
