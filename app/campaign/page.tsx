@@ -4,6 +4,7 @@ import { Input, Button, Textarea, Select, SelectItem } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import "easymde/dist/easymde.min.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -12,19 +13,10 @@ import { useUser } from "@clerk/nextjs";
 
 enum CurrencyEnum {
   KES = "KES",
-  USD = "USD",
-  EUR = "EUR",
-  GBP = "GBP",
+  // USD = "USD",
+  // EUR = "EUR",
+  // GBP = "GBP",
 }
-
-// type Inputs = {
-//   title: string;
-//   currency: CurrencyEnum;
-//   deadline: Date;
-//   phone: string;
-//   amount: number;
-//   description: string;
-// };
 
 const schema = z.object({
   title: z.string().min(3).max(100),
@@ -36,6 +28,15 @@ const schema = z.object({
   userId: z.string(),
 });
 
+const ValidationSchema = z.object({
+  title: z.string().min(3).max(100),
+  currency: z.nativeEnum(CurrencyEnum),
+  deadline: z.any(),
+  phone: z.string().min(10).max(13),
+  amount: z.number().min(10),
+  description: z.string().min(10).max(1000),
+  userId: z.string(),
+});
 type CampaignProps = z.infer<typeof schema>;
 
 function Campaign() {
@@ -45,7 +46,12 @@ function Campaign() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CampaignProps>();
+  } = useForm<CampaignProps>({
+    // resolver for only title and description
+    resolver: zodResolver(ValidationSchema),
+    mode: "onBlur",
+    shouldFocusError: true,
+  });
   const onSubmit: SubmitHandler<CampaignProps> = async (data) => {
     data.deadline = new Date(data.deadline);
     data.amount = Number(data.amount);
@@ -64,7 +70,7 @@ function Campaign() {
         router.push("/");
       })
       .catch((err) => {
-        toast.error("An error occured while creating your campaign.");
+        toast.error("An error occured while creating your campaign." + err);
         console.log("error creating campaign. Error:" + err);
       });
   };
@@ -90,17 +96,22 @@ function Campaign() {
               isRequired
               placeholder="Enter your campaign title here..."
               {...register("title", { required: true })}
+              isInvalid={errors.title ? true : false}
+              errorMessage={errors.title && errors.title.message}
             />
             <Input
               label="Amount"
               isRequired
+              type="number"
               placeholder="0.00"
               startContent={
                 <div className="pointer-events-none flex items-center">
                   <span className="text-default-400 text-small">$</span>
                 </div>
               }
-              {...register("amount", { required: true })}
+              {...register("amount", { required: true})}
+              isInvalid={errors.amount ? true : false}
+              errorMessage={errors.amount ? errors.amount.message : ""}
             />
             <Select label="Currency" isRequired {...register("currency")}>
               {currencyOptions.map((option) => (
@@ -114,6 +125,8 @@ function Campaign() {
               isRequired
               placeholder="Enter your phone number here..."
               {...register("phone", { required: true })}
+              isInvalid={errors.phone ? true : false}
+              errorMessage={errors.phone && errors.phone.message}
             />
             <Input
               label="Deadline"
@@ -127,7 +140,9 @@ function Campaign() {
             label="Description"
             isRequired
             placeholder="Enter your campaign description here..."
-            {...register("description", { required: true })}
+            {...register("description", { required: true, maxLength: 1000 })}
+            isInvalid={errors.description ? true : false}
+            errorMessage={errors.description && errors.description.message}
           />
           <div className="flex justify-center">
             <Button
