@@ -100,22 +100,61 @@ export async function POST(req: Request) {
   if (eventType === "user.deleted") {
     const { id } = evt.data;
     try {
-    await prisma.campaign.deleteMany({
-      where: {
-        user_id: id,
-      },
-    });
-    const user = await prisma.user.delete({
-      where: {
-        id: id,
-      },
-    });
-    console.log("User deleted:", user?.email ?? "No email found");
-    }
-    catch (err) {
-      console.error('Error deleting user and campaigns: ', err);
+      await prisma.campaign.deleteMany({
+        where: {
+          user_id: id,
+        },
+      });
+      const user = await prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+      console.log("User deleted:", user?.email ?? "No email found");
+    } catch (err) {
+      console.error("Error deleting user and campaigns: ", err);
     }
   }
-
-  return new Response("", { status: 200 });
+  // if event type is session created check if user exists and update the user metadata
+  if (eventType === "session.created" && evt.data) {
+    const { user_id } = evt.data;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: user_id,
+      },
+    });
+    if (!user) {
+      // create a new user if the user does not exist
+      // first fetch the user data from clerk
+      const clerkUser = await clerkClient.users.getUser(user_id);
+      // create the user in the database
+      const newUser = await prisma.user.create({
+        data: {
+          id: clerkUser.id,
+          email: clerkUser.emailAddresses[0].emailAddress,
+          firstName: clerkUser.firstName,
+          lastName: clerkUser.lastName,
+          role: "USER",
+          imageUrl: clerkUser.imageUrl,
+        },
+      });
+      console.log("User created:", newUser?.email ?? "No email found");
+      await clerkClient.users.updateUserMetadata(user_id, {
+        // Read only on client, Read / Write on the server
+        publicMetadata: {
+          role: "USER",
+        },
+        // Read only on server and Writable on Server
+        privateMetadata: {
+          role: "USER",
+        },
+        // Read / Write anywhere
+        unsafeMetadata: {
+          role: "USER",
+        },
+      });
+      console.log("User with role saved to database and  metadata created ");
+    }
+    return new Response("", { status: 200 });
+  }
 }
